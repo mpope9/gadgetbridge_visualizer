@@ -1,3 +1,7 @@
+<script >
+  window.heartRateChartData = <%= @conn.assigns.heart_rate_data %>;
+  window.heartRateChartLabels = <%= raw(@conn.assigns.heart_rate_labels) %>;
+</script>
 <section class="section is-main-section">
   <div class="tile is-ancestor">
     <div class="tile is-parent">
@@ -5,17 +9,18 @@
         <div class="card-content">
           <div class="level is-mobile">
             <div class="level-item">
-              <div class="is-widget-label"><h3 class="subtitle is-spaced">
-                  Avg Heart Rate
-                </h3>
+              <div class="is-widget-label">
+                <h3 class="subtitle is-spaced">Avg Heart Rate</h3>
                 <h1 class="title">
-                  <%= @conn.assigns.avg_heart_rate %> bpm
+                  <%= @conn.assigns.heart_rate_avg %> bpm
                 </h1>
               </div>
             </div>
             <div class="level-item has-widget-icon">
-              <div class="is-widget-icon"><span class="icon has-text-danger is-large">
-                  <i class="mdi mdi-heart-pulse mdi-48px"></i></span>
+              <div class="is-widget-icon">
+                <span class="icon has-text-danger is-large">
+                  <i class="mdi mdi-heart-pulse mdi-48px"></i>
+                </span>
               </div>
             </div>
           </div>
@@ -27,17 +32,16 @@
         <div class="card-content">
           <div class="level is-mobile">
             <div class="level-item">
-              <div class="is-widget-label"><h3 class="subtitle is-spaced">
-                  Total Sleep
-                </h3>
-                <h1 class="title">
-                  5hrs 10mins
-                </h1>
+              <div class="is-widget-label">
+                <h3 class="subtitle is-spaced">Total Sleep</h3>
+                <h1 class="title">5hrs 10mins</h1>
               </div>
             </div>
             <div class="level-item has-widget-icon">
-              <div class="is-widget-icon"><span class="icon has-text-info is-large">
-                  <i class="mdi mdi-sleep mdi-48px"></i></span>
+              <div class="is-widget-icon">
+                <span class="icon has-text-info is-large">
+                  <i class="mdi mdi-sleep mdi-48px"></i>
+                </span>
               </div>
             </div>
           </div>
@@ -49,17 +53,18 @@
         <div class="card-content">
           <div class="level is-mobile">
             <div class="level-item">
-              <div class="is-widget-label"><h3 class="subtitle is-spaced">
-                  Steps
-                </h3>
+              <div class="is-widget-label">
+                <h3 class="subtitle is-spaced">Steps</h3>
                 <h1 class="title">
-                  500 Steps
+                  <%= @conn.assigns.steps_total %> Steps
                 </h1>
               </div>
             </div>
             <div class="level-item has-widget-icon">
-              <div class="is-widget-icon"><span class="icon has-text-success is-large">
-                  <i class="mdi mdi-walk mdi-48px"></i></span>
+              <div class="is-widget-icon">
+                <span class="icon has-text-success is-large">
+                  <i class="mdi mdi-walk mdi-48px"></i>
+                </span>
               </div>
             </div>
           </div>

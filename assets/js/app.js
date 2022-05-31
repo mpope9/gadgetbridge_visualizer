@@ -51,16 +51,62 @@ var heartRateChart = echarts.init(heartRateDom);
 var heartRateOption;
 
 heartRateOption = {
+  toolbox: {
+    show: true,
+    feature: {
+      saveAsImage: {show: true},
+      dataView : {show: true, readOnly: false},
+    }
+  },
+  dataZoom: [
+    {
+      type: 'slider',
+      show: true,
+      realtime: true,
+      start: 0,
+      end: 100,
+      top: 25
+    },
+    {
+      type: 'inside',
+      realtime: true,
+      start: 0,
+      end: 100,
+      top: 25
+    }
+  ],
+  tooltip: {
+    trigger: 'axis',
+    formatter: (params) => { 
+      return `Heart Rate: ${params[0].data}`;
+    },
+    axisPointer: {
+      type: 'cross',
+      animation: false,
+      label: {
+        backgroundColor: '#505765'
+      }
+    }
+  },
   xAxis: {
+    data: window.heartRateChartLabels,
     type: 'category',
-    data: ['1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm']
+    boundryGap: false,
+    axisLine: {
+      onZero: false
+    },
+    axisLabel: {
+      rotate: 45
+    }
   },
   yAxis: {
     type: 'value'
   },
   series: [
     {
-      data: [60, 62, 120, 50, 51, 60, 63],
+      data: window.heartRateChartData,
+      smooth: true,
+      lineStyle: {color: '#C41E3A'},
       type: 'line'
     }
   ]

@@ -6,7 +6,7 @@ defmodule GadgetbridgeVisualizerWeb.Router do
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, {GadgetbridgeVisualizerWeb.LayoutView, :root}
-    plug :protect_from_forgery
+    #plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
 
@@ -18,6 +18,8 @@ defmodule GadgetbridgeVisualizerWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    post "/update", PageController, :update
   end
 
   # Other scopes may use custom stacks.

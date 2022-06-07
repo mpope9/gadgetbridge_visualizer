@@ -4,6 +4,7 @@ defmodule GadgetbridgeVisualizerWeb.PageController do
   alias GadgetbridgeVisualizer.HeartRate
   alias GadgetbridgeVisualizer.DbUtils
   alias GadgetbridgeVisualizer.Steps
+  alias GadgetbridgeVisualizer.Utils
 
   @doc """
   Index, EG the 'Overview' page.
@@ -18,8 +19,8 @@ defmodule GadgetbridgeVisualizerWeb.PageController do
     today = DateTime.to_date(now)
     time = DateTime.to_time(now)
 
-    {:ok, datetime_earlier} = DateTime.new(Date.add(today, -2), time)
-    {:ok, datetime_today} = DateTime.new(today, time)
+    {:ok, datetime_earlier} = DateTime.new(Date.add(today, -10), time)
+    {:ok, datetime_today} = DateTime.new(Date.add(today, -4), time)
     # End dummy dates.
   
     heart_rate_avg = HeartRate.avg(datetime_earlier, datetime_today)
@@ -31,11 +32,27 @@ defmodule GadgetbridgeVisualizerWeb.PageController do
     heart_rate_data_json = Jason.encode!(heart_rate_data)
 
     conn
+    # Section title.
+    |> assign(:title, "Stats")
+    |> assign(:sub_title, "Overview")
+    # Activates side-bar section.
+    |> assign(:overview_active, Utils.activation_class())
+    # Page specific assigns.
     |> assign(:heart_rate_avg, heart_rate_avg)
     |> assign(:steps_total, steps_total)
     |> assign(:heart_rate_labels, heart_rate_labels_json)
     |> assign(:heart_rate_data, heart_rate_data_json)
     |> render("index.html")
+  end
+
+  def about(conn, _params) do
+    conn
+    # Section title.
+    |> assign(:title, "System")
+    |> assign(:sub_title, "About")
+    # Activates side-bar section.
+    |> assign(:about_active, Utils.activation_class())
+    |> render("about.html")
   end
 
   # Gets binary data from the request, merges databases.

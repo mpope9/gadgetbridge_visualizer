@@ -6,6 +6,7 @@ defmodule GadgetbridgeVisualizer.HeartRate do
   import Ecto.Query, only: [from: 2]
 
   alias GadgetbridgeVisualizer.Model.MiBandActivitySample
+  alias GadgetbridgeVisualizer.DbUtils
   alias GadgetbridgeVisualizer.Repo
 
   @doc """
@@ -20,8 +21,28 @@ defmodule GadgetbridgeVisualizer.HeartRate do
         where: s.heart_rate != 255,
         select: avg(s.heart_rate)
 
-    [avg] = Repo.all(query)
-    :erlang.float_to_binary(avg, [decimals: 2])
+    DbUtils.catch_nil_float(Repo.all(query))
+  end
+
+  def max(start_date, end_date) do
+    query =
+      from s in MiBandActivitySample,
+        where: fragment("? BETWEEN strftime('%s', ?, 'utc') AND strftime('%s', ?, 'utc')", s.timestamp, ^start_date, ^end_date),
+        where: s.heart_rate != 255,
+        select: max(s.heart_rate)
+
+    DbUtils.catch_nil_float(Repo.all(query))
+  end
+
+  def min(start_date, end_date) do
+    query =
+      from s in MiBandActivitySample,
+        where: fragment("? BETWEEN strftime('%s', ?, 'utc') AND strftime('%s', ?, 'utc')", s.timestamp, ^start_date, ^end_date),
+        where: s.heart_rate != 255,
+        where: s.heart_rate > 0,
+        select: min(s.heart_rate)
+
+    DbUtils.catch_nil_float(Repo.all(query))
   end
 
   def heart_rates(start_date, end_date) do

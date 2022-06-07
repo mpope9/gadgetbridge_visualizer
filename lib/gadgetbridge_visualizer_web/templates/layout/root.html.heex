@@ -87,7 +87,7 @@
               </a>
             </div>
           </div>
-          <a href="https://justboil.me/bulma-admin-template/free-html-dashboard/" title="About" class="navbar-item has-divider is-desktop-icon-only">
+          <a href={Routes.static_path(@conn, "/about")} title="About" class="navbar-item has-divider is-desktop-icon-only">
             <span class="icon"><i class="mdi mdi-help-circle-outline"></i></span>
             <span>About</span>
           </a>
@@ -108,7 +108,7 @@
         <p class="menu-label">Charts</p>
         <ul class="menu-list">
           <li>
-            <a href="index.html" class="is-active router-link-active has-icon">
+            <a href={Routes.static_path(@conn, "/")} class={@conn.assigns[:overview_active]}>
               <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
               <span class="menu-item-label">Overview</span>
             </a>
@@ -117,8 +117,8 @@
         <p class="menu-label">Detailed Charts</p>
         <ul class="menu-list">
           <li>
-            <a href="tables.html" class="has-icon">
-              <span class="icon has-update-mark"><i class="mdi mdi-heart-pulse"></i></span>
+            <a href={Routes.static_path(@conn, "/heart_rate")} class={@conn.assigns[:heart_rate_active]}>
+              <span class="icon"><i class="mdi mdi-heart-pulse"></i></span>
               <span class="menu-item-label">Heart Rate</span>
             </a>
           </li>
@@ -129,13 +129,13 @@
             </a>
           </li>
           <li>
-            <a href="profile.html" class="has-icon">
+            <a href={Routes.static_path(@conn, "/activity")} class={@conn.assigns[:activity_active]}>
               <span class="icon"><i class="mdi mdi-arm-flex"></i></span>
               <span class="menu-item-label">Activity</span>
             </a>
           </li>
         </ul>
-        <p class="menu-label">About</p>
+        <p class="menu-label">Links</p>
         <ul class="menu-list">
           <li>
             <a href="https://github.com/mpope9/gadgetbridge_visualizer" target="_blank" class="has-icon">
@@ -156,7 +156,7 @@
             </a>
           </li>
           <li>
-            <a href="https://justboil.me/bulma-admin-template/free-html-dashboard/" class="has-icon">
+            <a href={Routes.static_path(@conn, "/about")} class={@conn.assigns[:about_active]}>
               <span class="icon"><i class="mdi mdi-help-circle"></i></span>
               <span class="menu-item-label">About</span>
             </a>
@@ -169,18 +169,31 @@
         <div class="level-left">
           <div class="level-item">
             <ul>
-              <li>Stats</li>
-              <li>Overview</li>
+              <li><%= @conn.assigns.title %></li>
+              <li><%= @conn.assigns.sub_title %></li>
             </ul>
           </div>
         </div>
+        <!-- Start and end date chooser. -->
         <div class="level-right">
           <div class="level-item">
-            <div class="buttons is-right">
-              <a href="https://github.com/vikdiesel/admin-one-bulma-dashboard" target="_blank" class="button is-primary">
-                <span class="icon"><i class="mdi mdi-github-circle"></i></span>
-                <span>GitHub</span>
-              </a>
+            <div class="is-right">
+              <label for="date-start">Date Start</label>
+            </div>
+          </div>
+          <div class="level-item">
+            <div class="is-right">
+              <input type="date" id="date-state" name="date-start">
+            </div>
+          </div>
+          <div class="level-item">
+            <div class="is-right">
+              <label for="date-end">Date End</label>
+            </div>
+          </div>
+          <div class="level-item">
+            <div class="is-right">
+              <input type="date" id="date-end" name="date-end">
             </div>
           </div>
         </div>

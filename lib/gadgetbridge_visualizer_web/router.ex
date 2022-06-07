@@ -6,7 +6,10 @@ defmodule GadgetbridgeVisualizerWeb.Router do
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, {GadgetbridgeVisualizerWeb.LayoutView, :root}
+
+    # This is a local application, so ignore protection for now.
     #plug :protect_from_forgery
+
     plug :put_secure_browser_headers
   end
 
@@ -17,9 +20,17 @@ defmodule GadgetbridgeVisualizerWeb.Router do
   scope "/", GadgetbridgeVisualizerWeb do
     pipe_through :browser
 
+    # Home overview endpoint.
     get "/", PageController, :index
+    get "/about", PageController, :about
 
+    # Endpoint to update the database.
     post "/update", PageController, :update
+
+    # Page to display advanced step data.
+    get "/activity", ActivityController, :index
+
+    get "/heart_rate", HeartController, :index
   end
 
   # Other scopes may use custom stacks.

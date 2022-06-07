@@ -19,7 +19,7 @@
             </div>
             <div class="level-item has-widget-icon">
               <div class="is-widget-icon">
-                <span class="icon has-text-danger is-large">
+                <span class="icon has-text-info is-large">
                   <i class="mdi mdi-heart-pulse mdi-48px"></i>
                 </span>
               </div>
@@ -34,14 +34,16 @@
           <div class="level is-mobile">
             <div class="level-item">
               <div class="is-widget-label">
-                <h3 class="subtitle is-spaced">Total Sleep</h3>
-                <h1 class="title">5hrs 10mins</h1>
+                <h3 class="subtitle is-spaced">Max Heart Rate</h3>
+                <h1 class="title">
+                  <%= @conn.assigns.heart_rate_max %> bpm
+                </h1>
               </div>
             </div>
             <div class="level-item has-widget-icon">
               <div class="is-widget-icon">
-                <span class="icon has-text-info is-large">
-                  <i class="mdi mdi-sleep mdi-48px"></i>
+                <span class="icon has-text-danger is-large">
+                  <i class="mdi mdi-heart mdi-48px"></i>
                 </span>
               </div>
             </div>
@@ -55,16 +57,16 @@
           <div class="level is-mobile">
             <div class="level-item">
               <div class="is-widget-label">
-                <h3 class="subtitle is-spaced">Steps</h3>
+                <h3 class="subtitle is-spaced">Min Heart Rate</h3>
                 <h1 class="title">
-                  <%= @conn.assigns.steps_total %> Steps
+                  <%= @conn.assigns.heart_rate_min %> bpm
                 </h1>
               </div>
             </div>
             <div class="level-item has-widget-icon">
               <div class="is-widget-icon">
                 <span class="icon has-text-success is-large">
-                  <i class="mdi mdi-walk mdi-48px"></i>
+                  <i class="mdi mdi-heart mdi-48px"></i>
                 </span>
               </div>
             </div>
@@ -73,48 +75,25 @@
       </div>
     </div>
   </div>
-  <div class="columns">
-    <div class="column">
-      <div class="card">
-        <header class="card-header">
-          <p class="card-header-title">
-          <span class="icon"><i class="mdi mdi-finance"></i></span>
-          Heart Rate
-          </p>
-          <a href="#" class="card-header-icon">
-            <span class="icon"><i class="mdi mdi-reload"></i></span>
-          </a>
-        </header>
-        <div class="card-content">
-          <div class="chart-area">
-            <div style="height: 100%;">
-              <div id="heart-rate-chart" style="height: 400px;">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="column">
-      <div class="card">
-        <header class="card-header">
-          <p class="card-header-title">
-          <span class="icon"><i class="mdi mdi-sleep"></i></span>
-          Sleep Breakdown
-          </p>
-          <a href="#" class="card-header-icon">
-            <span class="icon"><i class="mdi mdi-reload"></i></span>
-          </a>
-        </header>
-        <div class="card-content">
-          <div class="chart-area">
-            <div style="height: 100%;">
-              <div id="sleep-chart" style="height: 400px;">
-              </div>
-            </div>
+
+  <div class="card">
+    <header class="card-header">
+      <p class="card-header-title">
+      <span class="icon"><i class="mdi mdi-finance"></i></span>
+      Heart Rate
+      </p>
+      <a href="#" class="card-header-icon">
+        <span class="icon"><i class="mdi mdi-reload"></i></span>
+      </a>
+    </header>
+    <div class="card-content">
+      <div class="chart-area">
+        <div style="height: 100%;">
+          <div id="heart-rate-chart" style="height: 400px;">
           </div>
         </div>
       </div>
     </div>
   </div>
-</section>
+
+</section> 

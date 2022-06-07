@@ -14,19 +14,12 @@ defmodule GadgetbridgeVisualizerWeb.PageController do
   """
   def index(conn, _params) do
 
-    # Dummy Dates
-    {:ok, now} = DateTime.now("Etc/UTC")
-    today = DateTime.to_date(now)
-    time = DateTime.to_time(now)
-
-    {:ok, datetime_earlier} = DateTime.new(Date.add(today, -10), time)
-    {:ok, datetime_today} = DateTime.new(Date.add(today, -4), time)
-    # End dummy dates.
-  
-    heart_rate_avg = HeartRate.avg(datetime_earlier, datetime_today)
-    steps_total = Steps.total(datetime_earlier, datetime_today)
+    {datetime_start, datetime_end} = DbUtils.default_date_range()
+ 
+    heart_rate_avg = HeartRate.avg(datetime_start, datetime_end)
+    steps_total = Steps.total(datetime_start, datetime_end)
     {heart_rate_labels, heart_rate_data} =
-      HeartRate.heart_rates(datetime_earlier, datetime_today)
+      HeartRate.heart_rates(datetime_start, datetime_end)
 
     heart_rate_labels_json = Jason.encode!(heart_rate_labels)
     heart_rate_data_json = Jason.encode!(heart_rate_data)

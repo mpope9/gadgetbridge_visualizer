@@ -3,6 +3,9 @@ defmodule GadgetbridgeVisualizer.DbUtils do
   Wrapper around steps related data.
   """
 
+  import Ecto.Query, only: [from: 2]
+
+  alias GadgetbridgeVisualizer.Model.MiBandActivitySample
   alias GadgetbridgeVisualizer.Repo
 
   def catch_nil_float(nil), do: 0.0
@@ -23,6 +26,25 @@ defmodule GadgetbridgeVisualizer.DbUtils do
         detatch toMerge;
       """
     )
+  end
+
+  # Get the latest timestamp from the DB to calculate the
+  # latest day of data.
+  def default_date_range() do
+    datetime_latest = DateTime.from_unix!(latest_timestamp())
+    today = DateTime.to_date(datetime_latest)
+    time = DateTime.to_time(datetime_latest)
+
+    datetime_earlier = DateTime.new!(Date.add(today, -1), time)
+
+    {datetime_earlier, datetime_latest}
+  end
+
+  defp latest_timestamp() do
+    query = 
+      from s in MiBandActivitySample,
+        select: max(s.timestamp)
+    catch_nil_float(Repo.all(query))
   end
 
 end

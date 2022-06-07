@@ -31,6 +31,8 @@ defmodule GadgetbridgeVisualizerWeb.Router do
     get "/activity", ActivityController, :index
 
     get "/heart_rate", HeartController, :index
+
+    get "/sleep", SleepController, :index
   end
 
   # Other scopes may use custom stacks.

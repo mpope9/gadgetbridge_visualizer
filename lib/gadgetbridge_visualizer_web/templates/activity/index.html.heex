@@ -1,6 +1,3 @@
-<script>
-</script>
-
 <section class="section is-main-section">
   <div class="columns">
     <div class="column">
@@ -48,3 +45,12 @@
   </div>
 
 </section>
+
+<script>
+  let stepsPerDayChartData = <%= @conn.assigns.steps_per_day_data %>;
+  let stepsPerDayChartLabels = <%= raw(@conn.assigns.steps_per_day_labels) %>;
+
+  stepsPerDayChart(stepsPerDayChartData, stepsPerDayChartLabels);
+</script>
+
+

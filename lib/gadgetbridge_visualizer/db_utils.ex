@@ -35,7 +35,7 @@ defmodule GadgetbridgeVisualizer.DbUtils do
     today = DateTime.to_date(datetime_latest)
     time = DateTime.to_time(datetime_latest)
 
-    datetime_earlier = DateTime.new!(Date.add(today, -1), time)
+    datetime_earlier = DateTime.new!(Date.add(today, -9), time)
 
     {datetime_earlier, datetime_latest}
   end

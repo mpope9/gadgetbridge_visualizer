@@ -12,6 +12,7 @@
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
     <title>Fitness!</title>
+    <script phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
 
   </head>
   <body>
@@ -175,7 +176,7 @@
         <div class="level-right">
           <div class="level-item">
             <div class="is-right">
-              <label for="date-start">Date Start</label>
+              <label for="date-start">Start Date</label>
             </div>
           </div>
           <div class="level-item">
@@ -185,7 +186,7 @@
           </div>
           <div class="level-item">
             <div class="is-right">
-              <label for="date-end">Date End</label>
+              <label for="date-end">End Date</label>
             </div>
           </div>
           <div class="level-item">
@@ -200,6 +201,5 @@
     <%= @inner_content %>
 
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
-    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
   </body>
 </html>

@@ -27,6 +27,9 @@ defmodule GadgetbridgeVisualizerWeb.Router do
     # Endpoint to update the database.
     post "/update", PageController, :update
 
+    # Endpoint to set the date range in the session.
+    post "/set_date_range", PageController, :set_date_range
+
     # Page to display advanced step data.
     get "/activity", ActivityController, :index
 

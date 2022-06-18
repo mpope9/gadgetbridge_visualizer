@@ -7,7 +7,9 @@ defmodule GadgetbridgeVisualizerWeb.ActivityController do
 
   def index(conn, _params) do
 
-    {datetime_start, datetime_end} = DbUtils.default_date_range()
+    {datetime_start, datetime_end} =
+      DbUtils.default_date_range(get_session(conn, :date_start), get_session(conn, :date_end))
+
     {steps_per_day_labels, steps_per_day_data} =
       Steps.per_diem(datetime_start, datetime_end)
 
@@ -17,6 +19,9 @@ defmodule GadgetbridgeVisualizerWeb.ActivityController do
     conn
     |> assign(:title, "Stats")
     |> assign(:sub_title, "Activity")
+    # Form vals.
+    |> assign(:date_start, datetime_start |> DateTime.to_date |> Date.to_string)
+    |> assign(:date_end, datetime_end |> DateTime.to_date |> Date.to_string)
     # Activates side-bar section.
     |> assign(:activity_active, Utils.activation_class())
     # Page specific assigns.

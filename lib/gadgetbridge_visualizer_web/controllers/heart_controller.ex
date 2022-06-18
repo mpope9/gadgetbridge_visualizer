@@ -7,7 +7,8 @@ defmodule GadgetbridgeVisualizerWeb.HeartController do
 
   def index(conn, _params) do
 
-    {datetime_start, datetime_end} = DbUtils.default_date_range()
+    {datetime_start, datetime_end} =
+      DbUtils.default_date_range(get_session(conn, :date_start), get_session(conn, :date_end))
     heart_rate_avg = HeartRate.avg(datetime_start, datetime_end)
     heart_rate_max = HeartRate.max(datetime_start, datetime_end)
     heart_rate_min = HeartRate.min(datetime_start, datetime_end)
@@ -22,6 +23,9 @@ defmodule GadgetbridgeVisualizerWeb.HeartController do
     # Section title.
     |> assign(:title, "Stats")
     |> assign(:sub_title, "Heart Rate")
+    # Form vals.
+    |> assign(:date_start, datetime_start |> DateTime.to_date |> Date.to_string)
+    |> assign(:date_end, datetime_end |> DateTime.to_date |> Date.to_string)
     # Activates side-bar section.
     |> assign(:heart_rate_active, Utils.activation_class())
     # Page specific assigns.

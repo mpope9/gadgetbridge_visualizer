@@ -163,39 +163,47 @@
       </div>
     </aside>
     <section class="section is-title-bar">
-      <div class="level">
-        <div class="level-left">
-          <div class="level-item">
-            <ul>
-              <li><%= @conn.assigns.title %></li>
-              <li><%= @conn.assigns.sub_title %></li>
-            </ul>
+      <%= form_for @conn, Routes.page_path(@conn, :set_date_range), fn f -> %>
+        <%= hidden_input f, :current_path, value: @conn.request_path %>
+        <div class="level">
+          <div class="level-left">
+            <div class="level-item">
+              <ul>
+                <li><%= @conn.assigns.title %></li>
+                <li><%= @conn.assigns.sub_title %></li>
+              </ul>
+            </div>
+          </div>
+          <!-- Start and end date chooser. -->
+          <div class="level-right">
+            <div class="level-item">
+              <div class="is-right">
+                <label for="date-start">Start Date</label>
+              </div>
+            </div>
+            <div class="level-item">
+              <div class="is-right">
+                <input type="date" id="date_start" name="date_start" value={@conn.assigns.date_start}>
+              </div>
+            </div>
+            <div class="level-item">
+              <div class="is-right">
+                <label for="date-end">End Date</label>
+              </div>
+            </div>
+            <div class="level-item">
+              <div class="is-right">
+                <input type="date" id="date_end" name="date_end" value={@conn.assigns.date_end}>
+              </div>
+            </div>
+            <div class="level-item">
+              <div class="is-right">
+                <%= submit "Set Range", class: "button is-primary" %>
+              </div>
+            </div>
           </div>
         </div>
-        <!-- Start and end date chooser. -->
-        <div class="level-right">
-          <div class="level-item">
-            <div class="is-right">
-              <label for="date-start">Start Date</label>
-            </div>
-          </div>
-          <div class="level-item">
-            <div class="is-right">
-              <input type="date" id="date-state" name="date-start">
-            </div>
-          </div>
-          <div class="level-item">
-            <div class="is-right">
-              <label for="date-end">End Date</label>
-            </div>
-          </div>
-          <div class="level-item">
-            <div class="is-right">
-              <input type="date" id="date-end" name="date-end">
-            </div>
-          </div>
-        </div>
-      </div>
+      <% end %>
     </section>
 
     <%= @inner_content %>

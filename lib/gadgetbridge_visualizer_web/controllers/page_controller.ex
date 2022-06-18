@@ -14,7 +14,8 @@ defmodule GadgetbridgeVisualizerWeb.PageController do
   """
   def index(conn, _params) do
 
-    {datetime_start, datetime_end} = DbUtils.default_date_range()
+    {datetime_start, datetime_end} =
+      DbUtils.default_date_range(get_session(conn, :date_start), get_session(conn, :date_end))
  
     heart_rate_avg = HeartRate.avg(datetime_start, datetime_end)
     steps_total = Steps.total(datetime_start, datetime_end)
@@ -28,6 +29,9 @@ defmodule GadgetbridgeVisualizerWeb.PageController do
     # Section title.
     |> assign(:title, "Stats")
     |> assign(:sub_title, "Overview")
+    # Form vals.
+    |> assign(:date_start, datetime_start |> DateTime.to_date |> Date.to_string)
+    |> assign(:date_end, datetime_end |> DateTime.to_date |> Date.to_string)
     # Activates side-bar section.
     |> assign(:overview_active, Utils.activation_class())
     # Page specific assigns.
@@ -39,10 +43,17 @@ defmodule GadgetbridgeVisualizerWeb.PageController do
   end
 
   def about(conn, _params) do
+
+    {datetime_start, datetime_end} =
+      DbUtils.default_date_range(get_session(conn, :date_start), get_session(conn, :date_end))
+
     conn
     # Section title.
     |> assign(:title, "System")
     |> assign(:sub_title, "About")
+    # Form vals.
+    |> assign(:date_start, datetime_start |> DateTime.to_date |> Date.to_string)
+    |> assign(:date_end, datetime_end |> DateTime.to_date |> Date.to_string)
     # Activates side-bar section.
     |> assign(:about_active, Utils.activation_class())
     |> render("about.html")
@@ -64,6 +75,20 @@ defmodule GadgetbridgeVisualizerWeb.PageController do
     conn
     |> put_status(:created)
     |> json(%{ok: "ok"})
+  end
+
+  def set_date_range(conn, params) do
+
+    %{
+      "date_start"    => date_start,
+      "date_end"      => date_end,
+      "current_path"  => current_path
+    } = params
+
+    conn
+    |> put_session(:date_start, date_start)
+    |> put_session(:date_end, date_end)
+    |> redirect(to: current_path)
   end
 
   defp random_str(length) do

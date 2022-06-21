@@ -1,6 +1,6 @@
 # GadgetbridgeVisualizer
 
-Gadgetbridge Visualizer is a companion application for the [Gadgetbridge](https://codeberg.org/Freeyourgadget/Gadgetbridge) application. Gadgetbridge is amazing for at-a-glace statistics. This is meant to augment Gadgetbridge, it is a way to visualize and aggregate long term data in a meaningful way. This app's philosophy is inline's with Gadgetbridge's: to respect the user's privacy, to rely on local data processing, and to put you completely in control of your health data.
+Gadgetbridge Visualizer is a companion web-application for the [Gadgetbridge](https://codeberg.org/Freeyourgadget/Gadgetbridge) mobile-application. Gadgetbridge is amazing for at-a-glace statistics. This is meant to augment Gadgetbridge, it is a way to visualize and aggregate long term data in a meaningful way. This app's philosophy is inline's with Gadgetbridge's: to respect the user's privacy, to rely on local data processing, and to put you completely in control of your health data.
 
 This is still pre-alpha.
 

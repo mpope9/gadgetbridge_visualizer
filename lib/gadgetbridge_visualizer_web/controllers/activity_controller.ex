@@ -23,6 +23,9 @@ defmodule GadgetbridgeVisualizerWeb.ActivityController do
         "year" -> Steps.per_year(datetime_start, datetime_end)
       end
 
+    steps_total = Steps.total(datetime_start, datetime_end)
+    days_total = Date.diff(DateTime.to_date(datetime_end), DateTime.to_date(datetime_start))
+
     json_steps_per_day_labels = Jason.encode!(steps_per_day_labels)
     json_steps_per_day_data = Jason.encode!(steps_per_day_data)
 
@@ -40,6 +43,8 @@ defmodule GadgetbridgeVisualizerWeb.ActivityController do
     |> assign(:steps_per_day_data, json_steps_per_day_data)
     |> assign(:activity_grouping_unit, get_activity_steps_grouping(conn))
     |> assign_active_activity_steps_grouping()
+    |> assign(:steps_total, steps_total)
+    |> assign(:days_total, days_total)
     |> render("index.html")
   end
 

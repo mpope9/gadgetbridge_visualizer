@@ -202,3 +202,61 @@ window.stepsPerDayChart = function(data, labels) {
     stepsPerDayOptions && stepsPerDayChart.setOption(stepsPerDayOptions);
 };
 
+// Steps total
+window.stepsGoal = function(stepsTotal, daysTotal) {
+    var stepsGoalDom = document.getElementById('steps-goal-chart');
+    var stepsGoalChart = echarts.init(stepsGoalDom);
+    var stepsGoalOptions;
+
+    var data;
+    var stepGoal = 8000;
+
+    if (daysTotal < 1 && stepsTotal > stepGoal) {
+        data = [
+            { value: stepsTotal, name: 'Steps Made'}
+        ];
+    }
+    if (daysTotal < 1 && stepsTotal < stepGoal) {
+        data = [
+            { value: stepsTotal, name: 'Steps Made'},
+            { value: 8000 - stepsTotal, name: 'Steps Missed'}
+        ];
+    }
+    if (daysTotal >= 1 && stepsTotal > (stepGoal * daysTotal)) {
+        data = [
+            { value: stepsTotal, name: 'Steps Made'}
+        ];
+    } else {
+        data = [
+            { value: stepsTotal, name: 'Steps Made'},
+            { value: (8000 * daysTotal) - stepsTotal, name: 'Steps Missed'}
+        ];
+    }
+
+    stepsGoalOptions = {
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left'
+        },
+        series: [
+            {
+                name: 'Access From',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                data: data,
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+    stepsGoalOptions && stepsGoalChart.setOption(stepsGoalOptions);
+};

@@ -45,8 +45,8 @@
       <div class="card">
         <header class="card-header">
           <p class="card-header-title">
-          <span class="icon"><i class="mdi mdi-map-marker-distance"></i></span>
-          Distance Per Day
+          <span class="icon"><i class="mdi mdi-percent-outline"></i></span>
+          Steps Goal (8k a day)
           </p>
           <a href="#" class="card-header-icon">
             <span class="icon"><i class="mdi mdi-reload"></i></span>
@@ -55,7 +55,7 @@
         <div class="card-content">
           <div class="chart-area">
             <div style="height: 100%;">
-              <div id="distance-per-chart" style="height: 400px;">
+              <div id="steps-goal-chart" style="height: 400px;">
               </div>
             </div>
           </div>
@@ -70,6 +70,10 @@
   let stepsPerDayChartData = <%= @conn.assigns.steps_per_day_data %>;
   let stepsPerDayChartLabels = <%= raw(@conn.assigns.steps_per_day_labels) %>;
 
+  let stepsTotal = <%= @conn.assigns.steps_total %>;
+  let daysTotal = <%= @conn.assigns.days_total %>;
+
   stepsPerDayChart(stepsPerDayChartData, stepsPerDayChartLabels);
+  stepsGoal(stepsTotal, daysTotal);
 </script>
 

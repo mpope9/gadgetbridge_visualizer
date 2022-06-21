@@ -32,6 +32,7 @@ defmodule GadgetbridgeVisualizerWeb.Router do
 
     # Page to display advanced step data.
     get "/activity", ActivityController, :index
+    post "/activity/set_activity_steps_grouping", ActivityController, :set_activity_steps_grouping
 
     get "/heart_rate", HeartController, :index
 

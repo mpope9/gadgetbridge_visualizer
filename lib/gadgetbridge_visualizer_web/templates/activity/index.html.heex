@@ -4,9 +4,29 @@
       <div class="card">
         <header class="card-header">
           <p class="card-header-title">
-          <span class="icon"><i class="mdi mdi-finance"></i></span>
+          <span class="icon"><i class="mdi mdi-walk"></i></span>
           Steps Per Day
           </p>
+          <div class="dropdown is-hoverable card-header-icon">
+            <div class="dropdown-trigger">
+              <button class="button is-primary is-light" aria-haspopup="true" aria-controls="dropdown-menu">
+                <span>Unit: <%= @conn.assigns[:activity_grouping_unit] %></span>
+                <span class="icon is-small"><i class="mdi mdi-menu-down" aria-hidden="true"></i></span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                <%= form_for @conn, Routes.activity_path(@conn, :set_activity_steps_grouping), fn f -> %>
+                  <%= hidden_input f, :current_path, value: @conn.request_path %>
+                  <button type="submit" class={@conn.assigns[:activity_grouping_hour_active]} name="activity_steps_grouping" value="hour">Hour</button>
+                  <button type="submit" class={@conn.assigns[:activity_grouping_day_active]} name="activity_steps_grouping" value="day">Day</button>
+                  <button type="submit" class={@conn.assigns[:activity_grouping_week_active]} name="activity_steps_grouping" value="week">Week</button>
+                  <button type="submit" class={@conn.assigns[:activity_grouping_month_active]} name="activity_steps_grouping" value="month">Month</button>
+                  <button type="submit" class={@conn.assigns[:activity_grouping_year_active]} name="activity_steps_grouping" value="year">Year</button>
+                <% end %>
+              </div>
+            </div>
+          </div>
           <a href="#" class="card-header-icon">
             <span class="icon"><i class="mdi mdi-reload"></i></span>
           </a>
@@ -25,7 +45,7 @@
       <div class="card">
         <header class="card-header">
           <p class="card-header-title">
-          <span class="icon"><i class="mdi mdi-sleep"></i></span>
+          <span class="icon"><i class="mdi mdi-map-marker-distance"></i></span>
           Distance Per Day
           </p>
           <a href="#" class="card-header-icon">
@@ -52,5 +72,4 @@
 
   stepsPerDayChart(stepsPerDayChartData, stepsPerDayChartLabels);
 </script>
-
 

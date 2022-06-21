@@ -45,6 +45,9 @@
 
 import * as echarts from 'echarts';
 
+var colorPalette = ['#ffa600', '#ff6361', '#bc5090', '#58508d', '#003f5c'].reverse();
+var colorPaletteDichotomy = ['#ffa600', '#58508d'];
+
 // Chart that draws the heart rates time series.
 window.drawHeartRateChart = function(data, labels) {
     var heartRateDom = document.getElementById('heart-rate-chart');
@@ -106,8 +109,8 @@ window.drawHeartRateChart = function(data, labels) {
         series: [
             {
                 data: data,
+                color: '#ff6361',
                 smooth: true,
-                lineStyle: {color: '#C41E3A'},
                 type: 'line'
             }
         ]
@@ -135,6 +138,7 @@ window.sleepChart = function() {
                 name: 'Access From',
                 type: 'pie',
                 radius: ['40%', '70%'],
+                color: colorPaletteDichotomy,
                 avoidLabelOverlap: false,
                 label: {
                     show: false,
@@ -189,6 +193,7 @@ window.stepsPerDayChart = function(data, labels) {
         series: [
             {
                 name: "Steps / day",
+                color: colorPalette,
                 label: {
                     show: true,
                     position: 'inside'
@@ -244,6 +249,7 @@ window.stepsGoal = function(stepsTotal, daysTotal) {
         series: [
             {
                 name: 'Access From',
+                color: colorPaletteDichotomy,
                 type: 'pie',
                 radius: ['40%', '70%'],
                 data: data,

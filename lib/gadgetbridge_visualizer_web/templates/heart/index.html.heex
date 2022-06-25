@@ -77,6 +77,25 @@
       <span class="icon"><i class="mdi mdi-finance"></i></span>
       Heart Rate
       </p>
+      <div class="dropdown is-hoverable card-header-icon">
+        <div class="dropdown-trigger">
+          <button class="button is-primary is-light" aria-haspopup="true" aria-controls="dropdown-menu">
+            <span>Unit: <%= @conn.assigns[:heart_rate_unit] %></span>
+            <span class="icon is-small"><i class="mdi mdi-menu-down" aria-hidden="true"></i></span>
+          </button>
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+          <div class="dropdown-content">
+            <%= form_for @conn, Routes.heart_path(@conn, :set_heart_rate_unit), fn f -> %>
+              <%= hidden_input f, :current_path, value: @conn.request_path %>
+              <button type="submit" class={@conn.assigns[:heart_rate_raw_active]} name="heart_rate_unit" value="raw">Raw</button>
+              <button type="submit" class={@conn.assigns[:heart_rate_hourly_active]} name="heart_rate_unit" value="hour">Hourly</button>
+              <button type="submit" class={@conn.assigns[:heart_rate_daily_active]} name="heart_rate_unit" value="day">Daily</button>
+              <button type="submit" class={@conn.assigns[:heart_rate_weekly_active]} name="heart_rate_unit" value="week">Weekly</button>
+            <% end %>
+          </div>
+        </div>
+      </div>
       <a href="#" class="card-header-icon">
         <span class="icon"><i class="mdi mdi-reload"></i></span>
       </a>
@@ -93,7 +112,19 @@
 </section> 
 
 <script type="text/javascript">
+  let heartRateChartUseRaw = <%= @conn.assigns.heart_rate_use_raw %>
+
   let heartRateChartData = <%= @conn.assigns.heart_rate_data %>;
   let heartRateChartLabels = <%= raw(@conn.assigns.heart_rate_labels) %>;
-  drawHeartRateChart(heartRateChartData, heartRateChartLabels);
+
+  let heartRateChartRollingLabels = <%= raw(@conn.assigns.heart_rate_chart_rolling_labels) %>
+  let heartRateChartMaxs = <%= @conn.assigns.heart_rate_chart_maxs %>
+  let heartRateChartMins = <%= @conn.assigns.heart_rate_chart_mins %>
+  let heartRateChartAvgs = <%= raw(@conn.assigns.heart_rate_chart_avgs) %>
+
+  if (heartRateChartUseRaw) {
+    drawHeartRateChart(heartRateChartData, heartRateChartLabels);
+  } else {
+    drawHeartRatreChartRolling(heartRateChartRollingLabels, heartRateChartMaxs, heartRateChartMins, heartRateChartAvgs);
+  }
 </script>

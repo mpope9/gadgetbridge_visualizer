@@ -35,6 +35,7 @@ defmodule GadgetbridgeVisualizerWeb.Router do
     post "/activity/set_activity_steps_grouping", ActivityController, :set_activity_steps_grouping
 
     get "/heart_rate", HeartController, :index
+    post "/heart_rate/set_heart_rate_unit", HeartController, :set_heart_rate_unit
 
     get "/sleep", SleepController, :index
   end

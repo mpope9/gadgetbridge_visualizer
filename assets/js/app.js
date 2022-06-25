@@ -118,6 +118,93 @@ window.drawHeartRateChart = function(data, labels) {
     heartRateOption && heartRateChart.setOption(heartRateOption);
 };
 
+window.drawHeartRatreChartRolling = function(labels, max, min, avg) {
+    var heartRateDom = document.getElementById('heart-rate-chart');
+    var heartRateChart = echarts.init(heartRateDom);
+    var heartRateOption;
+
+    heartRateOption = {
+        toolbox: {
+            show: true,
+            feature: {
+                saveAsImage: {show: true},
+                dataView : {show: true, readOnly: false},
+            }
+        },
+        legend: {
+            data: ['Max', 'Min', 'Avg']
+        },
+        dataZoom: [
+            {
+                type: 'slider',
+                show: true,
+                realtime: true,
+                start: 0,
+                end: 100,
+                top: 25
+            },
+            {
+                type: 'inside',
+                realtime: true,
+                start: 0,
+                end: 100,
+                top: 25
+            }
+        ],
+        tooltip: {
+            trigger: 'axis',
+            formatter: (params) => { 
+                return `Heart Rate: ${params[0].data}`;
+            },
+            axisPointer: {
+                type: 'cross',
+                animation: false,
+                label: {
+                    backgroundColor: '#505765'
+                }
+            }
+        },
+        xAxis: {
+            data: labels,
+            type: 'category',
+            boundryGap: false,
+            axisLine: {
+                onZero: false
+            },
+            axisLabel: {
+                rotate: 45
+            }
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: 'Max',
+                data: max,
+                color: '#ff6361',
+                smooth: true,
+                type: 'line'
+            },
+            {
+                name: 'Min',
+                data: min,
+                color: '#003f5c',
+                smooth: true,
+                type: 'line'
+            },
+            {
+                name: 'Avg',
+                data: avg,
+                color: '#bc5090',
+                smooth: true,
+                type: 'line'
+            }
+        ]
+    };
+    heartRateOption && heartRateChart.setOption(heartRateOption);
+};
+
 
 // Sleep Chart
 window.sleepChart = function() {

@@ -15,12 +15,23 @@ defmodule GadgetbridgeVisualizerWeb.ActivityController do
 
     {steps_per_day_labels, steps_per_day_data} =
       case get_session(conn, :activity_steps_grouping) do
-        nil -> Steps.per_diem(datetime_start, datetime_end)
-        "hour" -> Steps.per_hour(datetime_start, datetime_end)
-        "day" -> Steps.per_diem(datetime_start, datetime_end)
-        "week" -> Steps.per_week(datetime_start, datetime_end)
-        "month" -> Steps.per_month(datetime_start, datetime_end)
-        "year" -> Steps.per_year(datetime_start, datetime_end)
+        nil ->
+          Steps.per_diem(datetime_start, datetime_end)
+
+        "hour" ->
+          Steps.per_hour(datetime_start, datetime_end)
+
+        "day" ->
+          Steps.per_diem(datetime_start, datetime_end)
+
+        "week" ->
+          Steps.per_week(datetime_start, datetime_end)
+
+        "month" ->
+          Steps.per_month(datetime_start, datetime_end)
+
+        "year" ->
+          Steps.per_year(datetime_start, datetime_end)
       end
 
     steps_total = Steps.total(datetime_start, datetime_end)
@@ -62,8 +73,6 @@ defmodule GadgetbridgeVisualizerWeb.ActivityController do
 
   defp assign_active_activity_steps_grouping(conn) do
 
-    activity_steps_grouping = get_activity_steps_grouping(conn)
-
     conn_new =
       conn
       |> assign(:activity_grouping_hour_active, @activity_grouping_is_white)
@@ -72,14 +81,16 @@ defmodule GadgetbridgeVisualizerWeb.ActivityController do
       |> assign(:activity_grouping_month_active, @activity_grouping_is_white)
       |> assign(:activity_grouping_year_active, @activity_grouping_is_white)
 
-    case activity_steps_grouping do
-      "hour" -> assign(conn_new, :activity_grouping_hour_active, @activity_grouping_is_primary)
-      "day" -> assign(conn_new, :activity_grouping_day_active, @activity_grouping_is_primary)
-      "week" -> assign(conn_new, :activity_grouping_week_active, @activity_grouping_is_primary)
-      "month" -> assign(conn_new, :activity_grouping_month_active, @activity_grouping_is_primary)
-      "year" -> assign(conn_new, :activity_grouping_year_active, @activity_grouping_is_primary)
-    end
+    active_key = get_active_key(get_activity_steps_grouping(conn))
+
+    assign(conn_new, active_key, @activity_grouping_is_primary)
   end
+
+  defp get_active_key("hour"), do:  :activity_grouping_hour_active
+  defp get_active_key("day"), do: :activity_grouping_day_active
+  defp get_active_key("week"), do: :activity_grouping_week_active
+  defp get_active_key("month"), do: :activity_grouping_month_active
+  defp get_active_key("year"), do: :activity_grouping_year_active
 
   defp get_activity_steps_grouping(conn) do
     case get_session(conn, :activity_steps_grouping) do

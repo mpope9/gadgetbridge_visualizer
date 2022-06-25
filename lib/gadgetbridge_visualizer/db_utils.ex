@@ -13,6 +13,10 @@ defmodule GadgetbridgeVisualizer.DbUtils do
   def catch_nil_float([value]) do
     :erlang.float_to_binary(value, [decimals: 2])
   end
+  def catch_nil_float(value) when is_integer(value), do: value
+  def catch_nil_float(value) do
+    :erlang.float_to_binary(value, [decimals: 2])
+  end
 
   def merge_sqlite(file) do
     Ecto.Adapters.SQL.query!(

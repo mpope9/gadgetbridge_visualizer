@@ -19,6 +19,11 @@ This is still pre-alpha.
 2. TOML configuration file.
 3. Companion app to synchronize sqlite database between GB and GBV.
 
+## Feature TODOs
+1. Sleep tracking.
+2. Activity tracking and drilldown.
+3. Rolling PAI?
+
 ## Development
 To start the Gadgetbridge development server:
 

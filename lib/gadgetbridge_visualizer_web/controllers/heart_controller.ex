@@ -16,8 +16,9 @@ defmodule GadgetbridgeVisualizerWeb.HeartController do
     heart_rate_max = HeartRate.max(datetime_start, datetime_end)
     heart_rate_min = HeartRate.min(datetime_start, datetime_end)
 
+    heart_rate_unit = get_heart_rate_unit(conn)
     heart_rate_use_raw =
-      case get_heart_rate_unit(conn) do
+      case heart_rate_unit do
         nil ->
           true
 
@@ -48,7 +49,7 @@ defmodule GadgetbridgeVisualizerWeb.HeartController do
       false ->
 
         {labels, max, min, avg} =
-          HeartRate.rolling_heart_rate(datetime_start, datetime_end)
+          HeartRate.rolling_heart_rate(heart_rate_unit, datetime_start, datetime_end)
         {[], [], labels, max, min, avg}
 
     end
@@ -117,7 +118,7 @@ defmodule GadgetbridgeVisualizerWeb.HeartController do
   defp get_active_key("raw"), do: :heart_rate_raw_active
   defp get_active_key("hour"), do: :heart_rate_hourly_active
   defp get_active_key("day"), do: :heart_rate_daily_active 
-  defp get_active_key("week"), do: :heart_rate_hourly_active
+  defp get_active_key("week"), do: :heart_rate_weekly_active
 
   defp get_heart_rate_unit(conn) do
     case get_session(conn, :heart_rate_unit) do

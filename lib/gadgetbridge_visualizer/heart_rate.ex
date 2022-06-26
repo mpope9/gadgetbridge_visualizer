@@ -61,38 +61,71 @@ defmodule GadgetbridgeVisualizer.HeartRate do
     |> Enum.unzip
   end
 
-  def rolling_heart_rate(date_start, date_end) do
+  def rolling_heart_rate("day", date_start, date_end) do
 
-    result =
-      Ecto.Adapters.SQL.query!(
-        Repo, """
-          SELECT
-            DISTINCT DATE(timestamp, 'unixepoch', 'localtime') as date,
-            MAX(heart_rate) OVER (
-                ORDER BY DATE(timestamp, 'unixepoch', 'localtime')
-                RANGE BETWEEN 6 PRECEDING AND CURRENT ROW
-            ) AS DailyMax,
-            MIN(heart_rate) OVER (
-                ORDER BY DATE(timestamp, 'unixepoch', 'localtime')
-                RANGE BETWEEN 6 PRECEDING AND CURRENT ROW
-            ) AS DailyMin,
-            AVG(heart_rate) OVER (
-                ORDER BY DATE(timestamp, 'unixepoch', 'localtime')
-                RANGE BETWEEN 6 PRECEDING AND CURRENT ROW
-            ) AS DailyAvg
-          FROM MI_BAND_ACTIVITY_SAMPLE
-          WHERE
-            heart_rate != 255 AND
-            heart_rate > 0 AND
-            timestamp BETWEEN strftime('%s', '#{date_start}', 'utc') AND strftime('%s', '#{date_end}', 'utc')
-          ORDER BY date;
-        """
-      )
-
-    result.rows
-    |> Enum.reduce({[], [], [], []}, fn [date, max, min, avg], {dates, maxs, mins, avgs} ->
-      {[date|dates], [max|maxs], [min|mins], [DbUtils.catch_nil_float(avg)|avgs]}
-    end)
+    Ecto.Adapters.SQL.query!(
+      Repo, """
+        SELECT
+          DISTINCT DATE(timestamp, 'unixepoch', 'localtime') as date,
+          MAX(heart_rate) OVER (
+              ORDER BY DATE(timestamp, 'unixepoch', 'localtime')
+              RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
+          ) AS DailyMax,
+          MIN(heart_rate) OVER (
+              ORDER BY DATE(timestamp, 'unixepoch', 'localtime')
+              RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
+          ) AS DailyMin,
+          AVG(heart_rate) OVER (
+              ORDER BY DATE(timestamp, 'unixepoch', 'localtime')
+              RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
+          ) AS DailyAvg
+        FROM MI_BAND_ACTIVITY_SAMPLE
+        WHERE
+          heart_rate != 255 AND
+          heart_rate > 0 AND
+          timestamp BETWEEN
+            STRFTIME('%s', '#{date_start}', 'utc') AND
+            STRFTIME('%s', '#{date_end}', 'utc')
+        ORDER BY date;
+      """)
+      |> unzip4()
   end
 
+  def rolling_heart_rate("week", date_start, date_end) do
+    Ecto.Adapters.SQL.query!(
+      Repo, """
+        SELECT
+          DISTINCT DATE(DATE(timestamp, 'unixepoch', 'localtime'), 'weekday 0', '-1 days') AS DATE,
+          MAX(heart_rate) OVER (
+              ORDER BY STRFTIME('%W', DATE(timestamp, 'unixepoch', 'localtime'))
+              RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
+          ) AS DailyAvg,
+          MIN(heart_rate) OVER (
+              ORDER BY STRFTIME('%W', DATE(timestamp, 'unixepoch', 'localtime')) 
+              RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
+          ) AS DailyMin,
+          AVG(heart_rate) OVER (
+              ORDER BY STRFTIME('%W', DATE(timestamp, 'unixepoch', 'localtime')) 
+              RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
+          ) AS DailyAvg
+        FROM MI_BAND_ACTIVITY_SAMPLE
+        WHERE
+          heart_rate != 255 AND
+          heart_rate > 0 AND
+          timestamp BETWEEN
+            STRFTIME('%s', '#{date_start}', 'utc') AND
+            STRFTIME('%s', '#{date_end}', 'utc')
+        ORDER BY date;
+      """)
+      |> unzip4()
+  end
+
+  defp unzip4(result) do
+    {labels, max, min, avg} =
+      result.rows
+      |> Enum.reduce({[], [], [], []}, fn [date, max, min, avg], {dates, maxs, mins, avgs} ->
+        {[date|dates], [max|maxs], [min|mins], [DbUtils.catch_nil_float(avg)|avgs]}
+      end)
+    {Enum.reverse(labels), Enum.reverse(max), Enum.reverse(min), Enum.reverse(avg)}
+  end
 end

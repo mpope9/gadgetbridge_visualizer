@@ -61,24 +61,53 @@ defmodule GadgetbridgeVisualizer.HeartRate do
     |> Enum.unzip
   end
 
+  def rolling_heart_rate("hour", date_start, date_end) do
+    Ecto.Adapters.SQL.query!(
+      Repo, """
+        SELECT
+          DISTINCT STRFTIME('%Y-%m-%d %H:00:00', DATETIME(timestamp, 'unixepoch', 'localtime')) AS Hour,
+          MAX(heart_rate) OVER (
+              ORDER BY (timestamp / 3600) * 3600
+              RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
+          ) AS Max,
+          MIN(heart_rate) OVER (
+              ORDER BY (timestamp / 3600) * 3600
+              RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
+          ) AS Min,
+          AVG(heart_rate) OVER (
+              ORDER BY (timestamp / 3600) * 3600
+              RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
+          ) AS Avg
+        FROM MI_BAND_ACTIVITY_SAMPLE
+        WHERE
+          heart_rate != 255 AND
+          heart_rate > 0 AND
+          timestamp BETWEEN
+            STRFTIME('%s', '#{date_start}', 'utc') AND
+            STRFTIME('%s', '#{date_end}', 'utc')
+        ORDER BY date;
+      """)
+      |> unzip4()
+  end
+
   def rolling_heart_rate("day", date_start, date_end) do
 
     Ecto.Adapters.SQL.query!(
       Repo, """
         SELECT
-          DISTINCT DATE(timestamp, 'unixepoch', 'localtime') as date,
+          DISTINCT DATE(timestamp, 'unixepoch', 'localtime') as Day,
           MAX(heart_rate) OVER (
               ORDER BY DATE(timestamp, 'unixepoch', 'localtime')
               RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
-          ) AS DailyMax,
+          ) AS Max,
           MIN(heart_rate) OVER (
               ORDER BY DATE(timestamp, 'unixepoch', 'localtime')
               RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
-          ) AS DailyMin,
+          ) AS Min,
           AVG(heart_rate) OVER (
               ORDER BY DATE(timestamp, 'unixepoch', 'localtime')
               RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
-          ) AS DailyAvg
+          ) AS Avg
         FROM MI_BAND_ACTIVITY_SAMPLE
         WHERE
           heart_rate != 255 AND
@@ -95,19 +124,19 @@ defmodule GadgetbridgeVisualizer.HeartRate do
     Ecto.Adapters.SQL.query!(
       Repo, """
         SELECT
-          DISTINCT DATE(DATE(timestamp, 'unixepoch', 'localtime'), 'weekday 0', '-1 days') AS DATE,
+          DISTINCT DATE(DATE(timestamp, 'unixepoch', 'localtime'), 'weekday 0', '-1 days') AS Week,
           MAX(heart_rate) OVER (
               ORDER BY STRFTIME('%W', DATE(timestamp, 'unixepoch', 'localtime'))
               RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
-          ) AS DailyAvg,
+          ) AS Max,
           MIN(heart_rate) OVER (
               ORDER BY STRFTIME('%W', DATE(timestamp, 'unixepoch', 'localtime')) 
               RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
-          ) AS DailyMin,
+          ) AS Min,
           AVG(heart_rate) OVER (
               ORDER BY STRFTIME('%W', DATE(timestamp, 'unixepoch', 'localtime')) 
               RANGE BETWEEN 1 PRECEDING AND CURRENT ROW
-          ) AS DailyAvg
+          ) AS Avg
         FROM MI_BAND_ACTIVITY_SAMPLE
         WHERE
           heart_rate != 255 AND

@@ -85,7 +85,7 @@ defmodule GadgetbridgeVisualizer.HeartRate do
           timestamp BETWEEN
             STRFTIME('%s', '#{date_start}', 'utc') AND
             STRFTIME('%s', '#{date_end}', 'utc')
-        ORDER BY date;
+        ORDER BY Hour;
       """)
       |> unzip4()
   end
@@ -115,7 +115,7 @@ defmodule GadgetbridgeVisualizer.HeartRate do
           timestamp BETWEEN
             STRFTIME('%s', '#{date_start}', 'utc') AND
             STRFTIME('%s', '#{date_end}', 'utc')
-        ORDER BY date;
+        ORDER BY Day;
       """)
       |> unzip4()
   end
@@ -144,7 +144,7 @@ defmodule GadgetbridgeVisualizer.HeartRate do
           timestamp BETWEEN
             STRFTIME('%s', '#{date_start}', 'utc') AND
             STRFTIME('%s', '#{date_end}', 'utc')
-        ORDER BY date;
+        ORDER BY Week;
       """)
       |> unzip4()
   end

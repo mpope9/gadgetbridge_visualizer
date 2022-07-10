@@ -48,6 +48,26 @@
           <span class="icon"><i class="mdi mdi-percent-outline"></i></span>
           Steps Goal (8k a day)
           </p>
+          <div class="dropdown is-hoverable card-header-icon">
+            <div class="dropdown-trigger">
+              <button class="button is-primary is-light" aria-haspopup="true" aria-controls="dropdown-menu">
+                <span>Unit: <%= @conn.assigns[:activity_grouping_unit] %></span>
+                <span class="icon is-small"><i class="mdi mdi-menu-down" aria-hidden="true"></i></span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                <%= form_for @conn, Routes.activity_path(@conn, :set_activity_steps_grouping), fn f -> %>
+                  <%= hidden_input f, :current_path, value: @conn.request_path %>
+                  <button type="submit" class={@conn.assigns[:activity_grouping_hour_active]} name="activity_steps_grouping" value="hour">Hour</button>
+                  <button type="submit" class={@conn.assigns[:activity_grouping_day_active]} name="activity_steps_grouping" value="day">Day</button>
+                  <button type="submit" class={@conn.assigns[:activity_grouping_week_active]} name="activity_steps_grouping" value="week">Week</button>
+                  <button type="submit" class={@conn.assigns[:activity_grouping_month_active]} name="activity_steps_grouping" value="month">Month</button>
+                  <button type="submit" class={@conn.assigns[:activity_grouping_year_active]} name="activity_steps_grouping" value="year">Year</button>
+                <% end %>
+              </div>
+            </div>
+          </div>
           <a href="#" class="card-header-icon">
             <span class="icon"><i class="mdi mdi-reload"></i></span>
           </a>
@@ -56,6 +76,116 @@
           <div class="chart-area">
             <div style="height: 100%;">
               <div id="steps-goal-chart" style="height: 400px;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <header class="card-header">
+      <p class="card-header-title">
+      <span class="icon"><i class="mdi mdi-chart-line"></i></span>
+      Activities Overlayed
+      </p>
+      <a href="#" class="card-header-icon">
+        <span class="icon"><i class="mdi mdi-reload"></i></span>
+      </a>
+    </header>
+    <div class="card-content">
+      <div class="chart-area">
+        <div style="height: 100%;">
+          <div id="activities-overlayed-chart" style="height: 400px;">
+            <section class="section">
+              <div class="content has-text-grey has-text-centered">
+                <p>
+                  <span class="icon is-large"><i class="mdi mdi-emoticon-sad mdi-48px"></i></span>
+                </p>
+                <p>Nothing's here…</p>
+                <p>Select activies from below!</p>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card has-table">
+    <header class="card-header">
+      <p class="card-header-title">
+        <span class="icon"><i class="mdi mdi-view-list"></i></span>
+        Activities
+      </p>
+      <a href="#" class="card-header-icon">
+        <span class="icon"><i class="mdi mdi-reload"></i></span>
+      </a>
+    </header>
+    <div class="card-content">
+      <div class="b-table has-pagination">
+        <div class="table-wrapper has-mobile-cards">
+          <table class="table is-fullwidth is-striped is-hoverable is-fullwidth">
+            <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Duration</th>
+              <th></th> <!-- Empty cell for time display. -->
+              <th>HR Max</th>
+              <th>HR Min</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <%= for {name, date_start, _, minutes_total, _, hr_max, hr_min} <- @activities do %>
+              <tr>
+                <!-- TODO: Replace with pre-calculated activity_kind... -->
+                <td class="is-image-cell">
+                  <div class="icon">
+                    <i class="mdi mdi-run-fast"></i>
+                  </div>
+                </td>
+                <td data-label="Name"><%= name %></td>
+                <td data-label="Date">
+                  <small class="has-text-grey is-abbr-like" title={date_start}><%= date_start %></small>
+                </td>
+                <td data-label="Type">Run</td> <!-- TODO: activity_kind mapping. -->
+                <td data-label="Duration" class="is-progress-cell">
+                  <progress max="100" class="progress is-small is-primary" value={(minutes_total / @duration_max) * 100}></progress>
+                </td>
+                <td data-label="Duration Time"><%= minutes_total %> Mins</td>
+                <td data-label="HR Max"><%= hr_max %></td>
+                <td data-label="HR Min"><%= hr_min %></td>
+                <td class="is-actions-cell">
+                  <div class="buttons is-right">
+                    <button class="button is-small is-success" type="button">
+                      <span class="icon"><i class="mdi mdi-eye"></i></span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+        <div class="notification">
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <div class="buttons has-addons">
+                  <button type="button" class="button is-active">1</button>
+                  <button type="button" class="button">2</button>
+                  <button type="button" class="button">3</button>
+                </div>
+              </div>
+            </div>
+            <div class="level-right">
+              <div class="level-item">
+                <small>Page 1 of 3</small>
               </div>
             </div>
           </div>

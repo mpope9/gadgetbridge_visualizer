@@ -1,6 +1,8 @@
 defmodule GadgetbridgeVisualizerWeb.ActivityController do
   use GadgetbridgeVisualizerWeb, :controller
 
+  alias GadgetbridgeVisualizer.HeartRate
+  alias GadgetbridgeVisualizer.Activity
   alias GadgetbridgeVisualizer.DbUtils
   alias GadgetbridgeVisualizer.Steps
   alias GadgetbridgeVisualizer.Utils
@@ -13,30 +15,18 @@ defmodule GadgetbridgeVisualizerWeb.ActivityController do
     {datetime_start, datetime_end} =
       DbUtils.default_date_range(get_session(conn, :date_start), get_session(conn, :date_end))
 
-    {steps_per_day_labels, steps_per_day_data} =
-      case get_session(conn, :activity_steps_grouping) do
-        nil ->
-          Steps.per_diem(datetime_start, datetime_end)
-
-        "hour" ->
-          Steps.per_hour(datetime_start, datetime_end)
-
-        "day" ->
-          Steps.per_diem(datetime_start, datetime_end)
-
-        "week" ->
-          Steps.per_week(datetime_start, datetime_end)
-
-        "month" ->
-          Steps.per_month(datetime_start, datetime_end)
-
-        "year" ->
-          Steps.per_year(datetime_start, datetime_end)
-      end
+    step_fun = get_step_fun(get_session(conn, :activity_steps_grouping))
+    {steps_per_day_labels, steps_per_day_data} = step_fun.(datetime_start, datetime_end)
 
     steps_total = Steps.total(datetime_start, datetime_end)
     days_total = Date.diff(DateTime.to_date(datetime_end), DateTime.to_date(datetime_start))
 
+    {activities, duration_max} =
+      Activity.activities(datetime_start, datetime_end)
+      |> Enum.map(&map_row_data_to_activity/1)
+      |> get_max_duration()
+
+    # Transform values into JSON.
     json_steps_per_day_labels = Jason.encode!(steps_per_day_labels)
     json_steps_per_day_data = Jason.encode!(steps_per_day_data)
 
@@ -56,7 +46,9 @@ defmodule GadgetbridgeVisualizerWeb.ActivityController do
     |> assign_active_activity_steps_grouping()
     |> assign(:steps_total, steps_total)
     |> assign(:days_total, days_total)
-    |> render("index.html")
+    |> render("index.html",
+      activities: activities,
+      duration_max: duration_max)
   end
 
   def set_activity_steps_grouping(conn, params) do
@@ -97,5 +89,35 @@ defmodule GadgetbridgeVisualizerWeb.ActivityController do
       nil -> "day"
       grouping -> grouping
     end
+  end
+
+  defp get_step_fun(nil), do: &Steps.per_diem/2
+  defp get_step_fun("hour"), do: &Steps.per_hour/2
+  defp get_step_fun("day"), do: &Steps.per_diem/2
+  defp get_step_fun("week"), do: &Steps.per_week/2
+  defp get_step_fun("month"), do: &Steps.per_month/2
+  defp get_step_fun("year"), do: &Steps.per_year/2
+
+  defp map_row_data_to_activity(value) do
+    {name, unix_start, unix_end, minutes_total, activity_kind} = value
+
+    dt_start = DateTime.from_unix!(unix_start, :millisecond) |> DateTime.to_date
+    dt_end = DateTime.from_unix!(unix_end, :millisecond) |> DateTime.to_date
+
+    heart_rate_max = HeartRate.max(unix_start, unix_end)
+    heart_rate_min = HeartRate.min(unix_start, unix_end)
+
+    {name, dt_start, dt_end, minutes_total, activity_kind,
+      heart_rate_max, heart_rate_min}
+  end
+
+  defp get_max_duration(activities) do
+    duration_max =
+      activities
+      |> Enum.reduce(0, fn
+        {_, _, _, minutes_total, _, _, _}, acc when minutes_total > acc -> minutes_total
+        {_, _, _, _, _, _, _}, acc -> acc
+      end)
+    {activities, duration_max}
   end
 end

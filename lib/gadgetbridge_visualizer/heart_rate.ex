@@ -24,6 +24,17 @@ defmodule GadgetbridgeVisualizer.HeartRate do
     DbUtils.catch_nil_float(Repo.all(query))
   end
 
+  def max(unix_start_in, unix_end_in) when is_integer(unix_start_in) do
+    unix_start = floor(unix_start_in / 1000)
+    unix_end = floor(unix_end_in / 1000)
+    query =
+      from s in MiBandActivitySample,
+        where: fragment("? BETWEEN ? AND ?", s.timestamp, ^unix_start, ^unix_end),
+        where: s.heart_rate != 255,
+        select: max(s.heart_rate)
+
+    DbUtils.catch_nil_float(Repo.all(query))
+  end
   def max(date_start, date_end) do
     query =
       from s in MiBandActivitySample,
@@ -34,6 +45,18 @@ defmodule GadgetbridgeVisualizer.HeartRate do
     DbUtils.catch_nil_float(Repo.all(query))
   end
 
+  def min(unix_start_in, unix_end_in) when is_integer(unix_start_in) do
+    unix_start = floor(unix_start_in / 1000)
+    unix_end = floor(unix_end_in / 1000)
+    query =
+      from s in MiBandActivitySample,
+        where: fragment("? BETWEEN ? AND ?", s.timestamp, ^unix_start, ^unix_end),
+        where: s.heart_rate != 255,
+        where: s.heart_rate > 0,
+        select: min(s.heart_rate)
+
+    DbUtils.catch_nil_float(Repo.all(query))
+  end
   def min(date_start, date_end) do
     query =
       from s in MiBandActivitySample,

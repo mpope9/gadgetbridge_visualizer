@@ -48,6 +48,10 @@ defmodule GadgetbridgeVisualizer.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
+
+      # Extra libs.
+      {:ex_purple_tiger, "~> 0.1.0"},
+
       # Front end shit.
       {:dart_sass, "~> 0.5", runtime: Mix.env() == :dev}
     ]

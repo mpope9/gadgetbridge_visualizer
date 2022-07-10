@@ -9,6 +9,7 @@ defmodule GadgetbridgeVisualizer.DbUtils do
   alias GadgetbridgeVisualizer.Repo
 
   def catch_nil_float(nil), do: 0.0
+  def catch_nil_float([nil]), do: 0.0
   def catch_nil_float([value]) when is_integer(value), do: value
   def catch_nil_float([value]) do
     :erlang.float_to_binary(value, [decimals: 2])
